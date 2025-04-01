@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y2 BMK APR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=KaiTi&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Comic+Sans+MS&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue-theme: #E3F2FD; /* 浅蓝色 */
+  --pink-theme: #FCE4EC; /* 浅粉色 */
+  --purple-theme: #F3E5F5; /* 浅紫色 */
+  --green-theme: #E8F5E9; /* 浅绿色 */
+}
+body {
+  font-family: 'KaiTi', serif; /* 默认字体为楷体 */
+  background-color: #f7fafc; /* 页面背景色 */
+  margin: 0;
+  padding: 0;
+}
+.flashcard-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  padding: 20px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .flashcard-container {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    gap: 10px;
+  }
+}
+.card-group {
+  padding: 15px;
+  border-radius: 12px;
+  display: none; /* 默认隐藏卡片组 */
+  background-color: white; /* 卡片组背景色 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 卡片组阴影 */
+}
+.group-1 { background-color: var(--blue-theme); }
+.group-2 { background-color: var(--pink-theme); }
+.group-3 { background-color: var(--purple-theme); }
+.group-4 { background-color: var(--green-theme); }
+.card {
+  width: 100%;
+  height: 180px;
+  margin: 10px auto;
+  perspective: 1000px;
+  cursor: pointer;
+}
+@media (max-width: 480px) {
+  .card {
+    height: 150px;
+  }
+}
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: white; /* 卡片背景色 */
+}
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 8px;
+  background: white;
+  font-size: 24px; /* 调整字体大小 */
+  word-wrap: break-word; /* 自动换行 */
+  overflow: hidden; /* 防止内容溢出 */
+  box-sizing: border-box; /* 确保内边距不影响尺寸 */
+}
+@media (max-width: 480px) {
+  .card-front, .card-back {
+    font-size: 20px;
+    padding: 8px;
+  }
+}
+.card-front {
+  font-family: 'KaiTi', serif; /* 正面使用楷体 */
+}
+.card-back {
+  transform: rotateY(180deg);
+  font-family: 'Comic Sans MS', cursive; /* 背面使用Comic Sans MS */
+}
+.group-title {
+  font-weight: bold;
+  padding: 10px 0;
+  margin-bottom: 15px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  font-size: 28px; /* 调整标题大小 */
+  font-family: 'KaiTi', serif; /* 标题使用楷体 */
+  text-align: center; /* 标题居中 */
+}
+@media (max-width: 480px) {
+  .group-title {
+    font-size: 24px;
+  }
+}
+.button-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+  padding: 0 10px;
+}
+.button-container button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  color: black; /* 按钮字体颜色为黑色 */
+  cursor: pointer;
+  font-size: 16px; /* 调整按钮字体大小 */
+  font-family: 'Comic Sans MS', cursive; /* 按钮使用Comic Sans MS */
+  transition: background-color 0.3s ease; /* 按钮悬停效果 */
+}
+@media (max-width: 480px) {
+  .button-container button {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
+.button-container button.group-1-btn {
+  background-color: var(--blue-theme); /* 第一组按钮颜色 */
+}
+.button-container button.group-2-btn {
+  background-color: var(--pink-theme); /* 第二组按钮颜色 */
+}
+.button-container button.group-3-btn {
+  background-color: var(--purple-theme); /* 第三组按钮颜色 */
+}
+.button-container button.group-4-btn {
+  background-color: var(--green-theme); /* 第四组按钮颜色 */
+}
+.button-container button:hover {
+  opacity: 0.8; /* 按钮悬停效果 */
+}
+.instruction {
+  text-align: center;
+  margin: 15px 0;
+  color: #666;
+  font-size: 18px; /* 调整提示语大小 */
+  font-family: 'KaiTi', serif; /* 提示语使用楷体 */
+  padding: 0 10px;
+}
+@media (max-width: 480px) {
+  .instruction {
+    font-size: 16px;
+  }
+}
+.header {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 15px 0;
+  text-align: center;
+}
+.header h1 {
+  font-size: 24px;
+  margin: 0;
+  font-family: 'KaiTi', serif;
+}
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 20px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Y2 BMK APR</h1>
+  <p class="instruction">点击卡片将会有读音 Click the card to hear the pronunciation.</p>
+</div>
+<div class="button-container">
+  <button class="group-1-btn" onclick="toggleGroup('group-1')">8-14/4</button>
+  <button class="group-2-btn" onclick="toggleGroup('group-2')">15-21/4</button>
+  <button class="group-3-btn" onclick="toggleGroup('group-3')">22-28/4</button>
+  <button class="group-4-btn" onclick="toggleGroup('group-4')">1-7/5</button>
+</div>
+<div class="flashcard-container">
+  <!-- 8-14/4 -->
+  <section id="group-1" class="card-group group-1">
+    <h2 class="group-title">8-14/4</h2>
+    <div class="card"><div class="card-inner"><div class="card-front">玩弹珠</div><div class="card-back">bermain guli</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">陪弟弟</div><div class="card-back">menemani adik</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">看电视</div><div class="card-back">menonton televisyen</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">遵守规则</div><div class="card-back">mematuhi peraturan</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">过马路</div><div class="card-back">melintas jalan</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">用天桥</div><div class="card-back">menggunakan jejantas</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">绑安全帽</div><div class="card-back">memakai topi keledar</div></div></div>
+  </section>
+
+  <!-- 15-21/4 -->
+  <section id="group-2" class="card-group group-2">
+    <h2 class="group-title">15-21/4</h2>
+    <div class="card"><div class="card-inner"><div class="card-front">等巴士</div><div class="card-back">menunggu bas</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">流汗</div><div class="card-back">mengeluarkan peluh</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">剪指甲</div><div class="card-back">memotong kuku</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">照顾安全</div><div class="card-back">menjaga keselamatan</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">唱歌</div><div class="card-back">menyanyikan lagu</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">帮老人</div><div class="card-back">menolong orang tua</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">站直</div><div class="card-back">berdiri tegak</div></div></div>
+  </section>
+
+  <!-- 22-28/4 -->
+  <section id="group-3" class="card-group group-3">
+    <h2 class="group-title">22-28/4</h2>
+    <div class="card"><div class="card-inner"><div class="card-front">温习功课</div><div class="card-back">mengulang kaji pelajaran</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">借书</div><div class="card-back">meminjam buku</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">上网</div><div class="card-back">melayari Internet</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">找资料</div><div class="card-back">mencari maklumat</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">找书</div><div class="card-back">mencari buku</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">拿书</div><div class="card-back">mengambil buku</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">排书</div><div class="card-back">menyusun buku</div></div></div>
+  </section>
+
+  <!-- 1-7/5 -->
+  <section id="group-4" class="card-group group-4">
+    <h2 class="group-title">1-7/5</h2>
+    <div class="card"><div class="card-inner"><div class="card-front">买食物</div><div class="card-back">membeli makanan</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">小心驾车</div><div class="card-back">memandu dengan cermat</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">绑安全带</div><div class="card-back">memakai tali pinggang keledar</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">负责任</div><div class="card-back">bertanggungjawab</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">等红绿灯</div><div class="card-back">menunggu lampu isyarat</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">遵守限速</div><div class="card-back">mematuhi had laju</div></div></div>
+    <div class="card"><div class="card-inner"><div class="card-front">有礼貌</div><div class="card-back">berbudi bahasa</div></div></div>
+  </section>
+</div>
+<script>
+// 切换卡片组显示
+function toggleGroup(groupId) {
+  const group = document.getElementById(groupId);
+  group.style.display = group.style.display === "none" ? "block" : "none";
+}
+
+// 卡片交互功能
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('click', function() {
+    this.classList.toggle('flipped');
+    playAudio(this.querySelector('.card-front').textContent.trim());
+  });
+});
+
+// 语音播放功能
+function playAudio(text) {
+  if (window.speechSynthesis) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'zh-CN';
+    window.speechSynthesis.speak(utterance);
+  } else {
+    alert("Browser not supported, please use Chrome or Edge");
+  }
+}
+
+// 默认显示第一组
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('group-1').style.display = 'block';
+});
+</script>
+</body>
+</html>
